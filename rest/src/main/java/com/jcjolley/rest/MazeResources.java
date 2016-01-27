@@ -29,13 +29,14 @@ public class MazeResources{
 	 @Produces(MediaType.TEXT_HTML)
 	 public String getMaze() {
 		System.out.println("Starting maze generation");
-		Maze m = Maze.create(30);
+                int size = 30;
+		Maze m = Maze.create(size);
 		System.out.println("Maze generation complete");
 		String output = m.toString();
 		output = output.replaceAll("\\R", "<br/>");
-		output = "<p style='line-height:70%; letter-spacing: -3px'>" + output;	
+		output = "<style>html{line-height:50%; background:lightblue;} .square{height:10px;width:10px; float:left;} .entrance{background:pink;} .exit{background:green;} .open{background:white;} .wall{background:black;}</style><div style='width: " + size * 10 + "'><p style='letter-spacing: -3px'>" + output;	
 
-		output += "<br/></p><p>Shortest path from entrance to exit is: " + m.getShortestPath(m.getEntrance(), m.getExit()).size() + "</p>";
+		output += "<br/></p><p>Shortest path from entrance to exit is: " + m.getShortestPath(m.getEntrance(), m.getExit()).size() + "</p></div>";
 		return output; 
 	 }
 }

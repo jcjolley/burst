@@ -259,10 +259,10 @@ public class Maze {
 					maze += found.toString();
 					found = null;
 				} else {
-					maze += "&#x25a0;";
+					maze += "<span class='square wall'> </span>";
 				}
 			}
-			maze += "\n";
+			maze += "<br/>";
 		}
 		return maze;
 	}

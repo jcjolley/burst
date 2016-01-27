@@ -287,9 +287,9 @@ public class Node {
 	@Override
 	public String toString(){
 		if (entrance)
-			return "&#9635;";
+			return "<span class='square entrance'> </span>";
 		if (exit)
-			return "&#9635;";
-		return "&#x25a1;";
+			return "<span class='square exit'> </span>";
+		return "<span class='square open'> </span>";
 	}
 }

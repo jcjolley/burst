@@ -26,14 +26,16 @@ public class MazeResources{
 
 	 @Path("maze")
 	 @GET
-	 @Produces(MediaType.TEXT_PLAIN)
+	 @Produces(MediaType.TEXT_HTML)
 	 public String getMaze() {
 		System.out.println("Starting maze generation");
 		Maze m = Maze.create(30);
 		System.out.println("Maze generation complete");
 		String output = m.toString();
+		output = output.replaceAll("\\R", "<br/>");
+		output = "<p style='line-height:70%; letter-spacing: -3px'>" + output;	
 
-		output += "\n Shortest path from entrance to exit is: " + m.getShortestPath(m.getEntrance(), m.getExit()).size();
+		output += "<br/></p><p>Shortest path from entrance to exit is: " + m.getShortestPath(m.getEntrance(), m.getExit()).size() + "</p>";
 		return output; 
 	 }
 }

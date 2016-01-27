@@ -32,10 +32,13 @@ public class Node {
 	private final boolean entrance;
 	private boolean exit;
 	private final Pos pos;
+	private int size;
 	private Node north;
 	private Node east;
 	private Node south;
 	private Node west;
+	private Node back;
+	
 
 	private Node(Builder builder) {
 		entrance = builder.entrance;
@@ -44,7 +47,9 @@ public class Node {
 		east = builder.east;
 		south = builder.south;
 		west = builder.west;
+		back = builder.back;
 		pos = builder.pos;
+		size = builder.size;
 	}
 
 	public static Node create(Node n){
@@ -53,6 +58,7 @@ public class Node {
 			.east(n.getEast())
 			.west(n.getWest())
 			.south(n.getSouth())
+			.back(n.getBack())
 			.build();
 	}
 	
@@ -65,6 +71,8 @@ public class Node {
 		private Node east = null;
 		private Node south = null;
 		private Node west = null;
+		private Node back = null;
+		private int size = 1;
 
 		public Builder(Pos pos) {
 			this.pos = pos;
@@ -115,7 +123,12 @@ public class Node {
 			this.west = west;
 			return this;
 		}
-
+		
+		public Builder back(Node back){
+			this.back = back;
+			return this;
+		}
+		
 		public Builder exit() {
 			this.exit = true;
 			return this;
@@ -125,7 +138,12 @@ public class Node {
 			this.entrance = true;
 			return this;
 		}
-
+		
+		public Builder size(int size){
+			this.size = size;
+			return this;
+		}
+		
 		@Override
 		public Node build() {
 			return new Node(this);
@@ -138,6 +156,14 @@ public class Node {
 
 	public boolean isExit() {
 		return exit;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
 	}
 
 	public Node getNorth() {
@@ -155,6 +181,7 @@ public class Node {
 
 		this.north = north;
 		north.south = this;
+		north.back = this;
 	}
 
 	public Node getEast() {
@@ -172,6 +199,7 @@ public class Node {
 
 		this.east = east;
 		east.west = this;
+		east.back = this;
 	}
 
 	public Node getSouth() {
@@ -188,6 +216,7 @@ public class Node {
 		}
 		this.south = south;
 		south.north = this;
+		south.back = this;
 	}
 
 	public Node getWest() {
@@ -203,6 +232,7 @@ public class Node {
 		}
 		this.west = west;
 		west.east = this;
+		west.back = this;
 	}
 
 	public void setExit(boolean exit) {
@@ -245,12 +275,21 @@ public class Node {
 		return pos;
 	}
 
+	public Node getBack() {
+		return back;
+	}
+
+	public void setBack(Node back) {
+		this.back = back;
+	}
+	
+
 	@Override
 	public String toString(){
 		if (entrance)
-			return "e";
+			return "&#9635;";
 		if (exit)
-			return "E";
-		return ".";
+			return "&#9635;";
+		return "&#x25a1;";
 	}
 }

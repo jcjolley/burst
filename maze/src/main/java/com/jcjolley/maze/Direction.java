@@ -52,4 +52,23 @@ public enum Direction {
 				return null;
 		}
 	}
+
+	public Direction getOpposite(){
+		Direction d = null;
+		switch(this){
+			case NORTH:
+				d = SOUTH;
+				break;
+			case EAST:
+				d = WEST;
+				break;
+			case SOUTH:
+				d = NORTH;
+				break;
+			case WEST:
+				d = EAST;
+				break;
+		}
+		return d;
+	}
 }

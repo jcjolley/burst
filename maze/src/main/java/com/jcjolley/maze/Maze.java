@@ -73,10 +73,10 @@ public class Maze {
 		m.exit = lastNode;
 
 		//randomly build branching paths throughout the maze	
-		for (int i = 0; i < (int)(size / 10); i++) {
+		for (int i = 0; i < (int) (size / 10); i++) {
 			m.getNodes().forEach(n -> {
-				if (rng.nextInt(10) == 1 ){
-					createPath(n, markedPositions,(int)(size / 3), size);
+				if (rng.nextInt(10) == 1) {
+					createPath(n, markedPositions, (int)(size / 3), size);
 				}
 			});
 		}
@@ -170,26 +170,45 @@ public class Maze {
 	private static Node addNode(Node lastNode, Set<Pos> marked, int size) {
 		List<Direction> directionsToTry = Lists.newArrayList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
 		Direction direction;
-		while (!directionsToTry.isEmpty()) {
-			direction = directionsToTry.get(rng.nextInt(directionsToTry.size()));
-			Pos newPos = lastNode.getPos().go(direction);
-			if (newPos.inBounds(size) && !marked.contains(newPos)) {
-				try {
-					Node currentNode = new Node.Builder(newPos).build();
-					lastNode.setDirection(direction, currentNode);
-					marked.add(newPos);
-					return currentNode;
-				} catch (IllegalArgumentException e) {
-					System.out.println(e.getMessage());
+		for (int i = 0; i < 5; i++) {
+			while (!directionsToTry.isEmpty()) {
+				direction = directionsToTry.get(rng.nextInt(directionsToTry.size()));
+				Pos newPos = lastNode.getPos().go(direction);
+				if (newPos.inBounds(size) && !marked.contains(newPos) && !willMakeRoom(lastNode.getPos(), newPos, marked)) {
+					try {
+						Node currentNode = new Node.Builder(newPos).build();
+						lastNode.setDirection(direction, currentNode);
+						marked.add(newPos);
+						return currentNode;
+					} catch (IllegalArgumentException e) {
+						System.out.println(e.getMessage());
+					}
 				}
+
+				//We couldn't add a node in the chosen direction.
+				directionsToTry.remove(direction);
 			}
-
-			//We couldn't add a node in the chosen direction.
-			directionsToTry.remove(direction);
+		lastNode = lastNode.getBack();
+		if (lastNode == null)
+			return null;
 		}
-
 		//There wasn't a direction to go!
 		return null;
+	}
+
+	private static boolean willMakeRoom(Pos lastPos, Pos p, Set<Pos> marked) {
+		//check to see if we're making a room.
+		List<Pos> positionsToCheck = Lists.newArrayList(p.goNorth(), p.goEast(), p.goSouth(), p.goWest());
+		boolean willMakeRoom = false;
+		int i = 0;
+		while (!willMakeRoom && i < positionsToCheck.size()) {
+			Pos test = positionsToCheck.get(i);
+			if (!test.equals(lastPos)) {
+				willMakeRoom = marked.contains(test);
+			}
+			i++;
+		}
+		return willMakeRoom;
 	}
 
 	/**
@@ -221,14 +240,13 @@ public class Maze {
 	@Override
 	public String toString() {
 		Set<Node> nodes = this.dfs(entrance, Sets.newHashSet());
-		String maze = "+";
+		String maze = "";
 		Node found = null;
-		for (int x = 0; x < size; x++) {
-			maze += "-";
-		}
-		maze += "+\n";
+		
+
+
+
 		for (int y = size - 1; y >= 0; y--) {
-			maze += "|";
 			for (int x = 0; x < size; x++) {
 				Pos p = Pos.create(x, y);
 				for (Node n : nodes) {
@@ -241,17 +259,11 @@ public class Maze {
 					maze += found.toString();
 					found = null;
 				} else {
-					maze += "X";
+					maze += "&#x25a0;";
 				}
 			}
-
-			maze += "|\n";
+			maze += "\n";
 		}
-		maze += "+";
-		for (int x = 0; x < size; x++) {
-			maze += "-";
-		}
-		maze += "+";
 		return maze;
 	}
 

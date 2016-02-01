@@ -36,7 +36,6 @@ public class MazeResources{
 		output = output.replaceAll("\\R", "<br/>");
 		output = "<style>html{line-height:50%; background:lightblue;} .square{height:10px;width:10px; float:left;} .entrance{background:pink;} .exit{background:green;} .open{background:white;} .wall{background:black;}</style><div style='width: " + size * 10 + "'><p style='letter-spacing: -3px'>" + output;	
 
-		output += "<br/></p><p>Shortest path from entrance to exit is: " + m.getShortestPath(m.getEntrance(), m.getExit()).size() + "</p></div>";
 		return output; 
 	 }
 }

@@ -5,6 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.jcjolley.maze.Maze;
+import javax.ws.rs.QueryParam;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -27,9 +28,14 @@ public class MazeResources {
 	@Path("maze")
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public String getMaze() {
+	public String getMaze(@QueryParam("size") String strSize) {
+		Integer size;
+		if (strSize != null){
+			size = Integer.parseInt(strSize);
+		} else {
+			size = 30;
+		}
 		System.out.println("Starting maze generation");
-		int size = 30;
 		Maze m = Maze.create(size);
 		System.out.println("Maze generation complete");
 		String output = m.toHTML();
@@ -47,8 +53,12 @@ public class MazeResources {
 	@Path("textMaze")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getTextMaze(){
-		int size = 30;
+	public String getTextMaze(@QueryParam("size") String strSize){
+		Integer size;
+		if (strSize != null)
+			size = Integer.parseInt(strSize);
+		else
+			size = 30;
 		Maze m = Maze.create(size);
 		String output = m.toString();
 		return output;

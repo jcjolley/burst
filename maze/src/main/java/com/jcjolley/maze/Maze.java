@@ -240,8 +240,7 @@ public class Maze {
         return marked;
     }
 
-    @Override
-    public String toString() {
+    public String toHTML() {
         String[][] grid = getGrid();
         String maze = "";
         for (int y = 0; y < size; y++) {
@@ -264,6 +263,39 @@ public class Maze {
         return maze;
     }
 
+    
+    @Override
+    public String toString(){
+        String[][] grid = getGrid();
+
+	grid = stripUneededWalls(grid);
+        String maze = "";
+	for (int i = 0; i < size + 2; i++){
+		maze += "X";
+	}
+	maze += "\n";
+        for (int y = 0; y < size; y++) {
+		maze += "X";
+            for (int x = 0; x < size; x++) {
+                Pos et = entrance.getPos();
+                Pos ex = exit.getPos();
+                if (x == et.getX() && y == et.getY()){
+                    maze += "e";
+                } else if (x == ex.getX() && y == ex.getY()) {
+                    maze += "E";
+                } else {
+                    maze += grid[x][y];
+                }
+            }
+            maze += "X\n";
+        }
+        
+	for (int i = 0; i < size + 2; i++){
+		maze += "X";
+	}
+        return maze;
+    }
+    
     public Set<Node> getNodes() {
         Set<Node> markedNodes = Sets.newHashSet();
         return dfs(entrance, markedNodes);
@@ -370,5 +402,29 @@ public class Maze {
             }
         }
         return grid;
+    }
+
+    private String[][] stripUneededWalls(String[][] grid){
+	for (int i = 0; i < size; i++){
+		for (int j = 0; j < size; j++){
+			if (grid[i][j].equals("X")){
+				grid[i][j] = "/";
+			}
+		}
+	}
+	
+	for (int x = 0; x < size; x++){
+		for (int y = 0; y < size; y++){
+			if (grid[x][y].equals("/")){
+				if ((	y + 1 < size && grid[x][y + 1].equals("."))
+				    || (y - 1 > 0    && grid[x][y - 1].equals("."))
+				    || (x + 1 < size && grid[x + 1][y].equals("."))
+				    || (x - 1 > 0    && grid[x - 1][y].equals("."))){
+					grid[x][y] = "X";
+				}
+			}
+		}
+	}
+	return grid;
     }
 }

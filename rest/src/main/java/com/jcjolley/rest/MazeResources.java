@@ -34,7 +34,12 @@ public class MazeResources {
 		System.out.println("Maze generation complete");
 		String output = m.toHTML();
 		output = output.replaceAll("\\R", "<br/>");
-		output = "<style>html{line-height:50%; background:lightblue;} .square{height:10px;width:10px; float:left;} .entrance{background:pink;} .exit{background:green;} .open{background:white;} .wall{background:black;}</style><div style='width: " + size * 10 + "'><p style='letter-spacing: -3px'>" + output;
+		output = "<style>html{line-height:50%; background:lightblue;} "
+			+ ".square{height:10px;width:10px; float:left;} .entrance{background:pink;} "
+			+ ".exit{background:green;} .open{background:white;} "
+			+ ".wall{background:black;}"
+			+ ".unseen{background:grey;}"
+			+ "</style><div style='width: " + (size + 2) * 10 + "'><p style='letter-spacing: -3px'>" + output;
 
 		return output;
 	}

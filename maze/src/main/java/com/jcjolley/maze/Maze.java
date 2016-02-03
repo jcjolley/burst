@@ -243,16 +243,18 @@ public class Maze {
     public String toHTML() {
         String[][] grid = getGrid();
         String maze = "";
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
+        for (int y = 0; y < size + 2; y++) {
+            for (int x = 0; x < size + 2; x++) {
                 Pos et = entrance.getPos();
                 Pos ex = exit.getPos();
-                if (x == et.getX() && y == et.getY()){
+                if (x == et.getX() + 1 && y == et.getY() + 1){
                     maze += "<span class='square entrance'> </span>";
-                } else if (x == ex.getX() && y == ex.getY()) {
+                } else if (x == ex.getX() + 1 && y == ex.getY() + 1) {
                     maze += "<span class='square exit'> </span>";
                 } else if (grid[x][y].equals(".")) {
                     maze += "<span class='square open'> </span>";
+		} else if (grid[x][y].equals("/")){
+		    maze += "<span class='square unseen> </span>";
                 } else {
                     maze += "<span class='square wall'> </span>";
                 }
@@ -270,29 +272,21 @@ public class Maze {
 
 	grid = stripUneededWalls(grid);
         String maze = "";
-	for (int i = 0; i < size + 2; i++){
-		maze += "X";
-	}
-	maze += "\n";
-        for (int y = 0; y < size; y++) {
-		maze += "X";
-            for (int x = 0; x < size; x++) {
+        for (int y = 0; y < size + 2; y++) {
+            for (int x = 0; x < size + 2; x++) {
                 Pos et = entrance.getPos();
                 Pos ex = exit.getPos();
-                if (x == et.getX() && y == et.getY()){
+                if (x == et.getX() + 1 && y == et.getY() + 1){
                     maze += "e";
-                } else if (x == ex.getX() && y == ex.getY()) {
+                } else if (x == ex.getX() + 1 && y == ex.getY() + 1) {
                     maze += "E";
                 } else {
                     maze += grid[x][y];
                 }
             }
-            maze += "X\n";
+		maze += "\n";
         }
         
-	for (int i = 0; i < size + 2; i++){
-		maze += "X";
-	}
         return maze;
     }
     
@@ -389,8 +383,23 @@ public class Maze {
                 }
             }
         }
+	
+	String[][] wrapGrid = new String[size + 2][size + 2];
+	for (int x = 0; x < size; x++){
+		for (int y = 0; y < size; y++) {
+			wrapGrid[x + 1][y + 1] = grid[x][y];
+		}
+    	}
 
-        return grid;
+	for (int i = 0; i < size + 2; i++){
+		wrapGrid[i][0] = "X";
+		wrapGrid[i][size + 1] = "X";
+		wrapGrid[0][i] = "X";
+		wrapGrid[size + 1][i] = "X";
+	}
+
+
+        return wrapGrid;
     }
     
     private String[][] addRoom(int roomSize, int x, int y, String[][] grid){
@@ -405,20 +414,20 @@ public class Maze {
     }
 
     private String[][] stripUneededWalls(String[][] grid){
-	for (int i = 0; i < size; i++){
-		for (int j = 0; j < size; j++){
+	for (int i = 0; i < size + 2; i++){
+		for (int j = 0; j < size + 2; j++){
 			if (grid[i][j].equals("X")){
 				grid[i][j] = "/";
 			}
 		}
 	}
 	
-	for (int x = 0; x < size; x++){
-		for (int y = 0; y < size; y++){
+	for (int x = 0; x < size + 2; x++){
+		for (int y = 0; y < size + 2; y++){
 			if (grid[x][y].equals("/")){
-				if ((	y + 1 < size && grid[x][y + 1].equals("."))
+				if ((	y + 1 < size + 2 && grid[x][y + 1].equals("."))
 				    || (y - 1 > 0    && grid[x][y - 1].equals("."))
-				    || (x + 1 < size && grid[x + 1][y].equals("."))
+				    || (x + 1 < size + 2 && grid[x + 1][y].equals("."))
 				    || (x - 1 > 0    && grid[x - 1][y].equals("."))){
 					grid[x][y] = "X";
 				}

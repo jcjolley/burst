@@ -241,7 +241,8 @@ public class Maze {
     }
 
     public String toHTML() {
-        String[][] grid = getGrid();
+        String[][] grid = stripUneededWalls(getGrid());
+	
         String maze = "";
         for (int y = 0; y < size + 2; y++) {
             for (int x = 0; x < size + 2; x++) {
@@ -254,7 +255,7 @@ public class Maze {
                 } else if (grid[x][y].equals(".")) {
                     maze += "<span class='square open'> </span>";
 		} else if (grid[x][y].equals("/")){
-		    maze += "<span class='square unseen> </span>";
+		    maze += "<span class='square unseen'> </span>";
                 } else {
                     maze += "<span class='square wall'> </span>";
                 }

@@ -63,6 +63,20 @@ public class MazeResources {
 		String output = m.toString();
 		return output;
 	}
+
+	@Path("numberMaze")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getNumberMaze(@QueryParam("size") String strSize){
+		Integer size;
+		if (strSize != null)
+			size = Integer.parseInt(strSize);
+		else
+			size = 30;
+		Maze m = Maze.create(size);
+		 
+		return m.toNumberString();
+	}
 }
 
 

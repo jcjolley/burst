@@ -1,0 +1,92 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Labyrinth</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel=stylesheet href="css/base.css"/>
+</head>
+<body>
+
+<div id="message"></div>
+<script src="js/three.min.js"></script>
+<script src="js/Detector.js"></script>
+<script src="js/Stats.js"></script>
+<script src="js/THREEx.KeyboardState.js"></script>
+<script src="js/THREEx.FullScreen.js"></script>
+<script src="js/THREEx.WindowResize.js"></script>
+<script src="js/wallBuilder.js"></script>
+<script src="js/initialize.js"></script>
+<script src="js/controls.js"></script>
+
+<!-- jQuery code to display an information button and box when clicked. -->
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/jquery-ui.js"></script>
+<link rel=stylesheet href="css/jquery-ui.css" />
+<link rel=stylesheet href="css/info.css"/>
+<script src="js/info.js"></script>
+<div id="infoButton"></div>
+<div id="infoBox" title="Demo Information">
+Movement controls: <br/>
+<ul>
+<li>W/S: Translate Forward/Backward
+<li>A/D: Rotate Left/Right
+<li>Q/E: Translate Left/Right
+<li>R/F: Rotate Up/Down
+<li>Z: Reset position and rotation.
+<li>Space/N: Translate Up/Down
+</ul>
+</div>
+
+<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+
+<script>
+/*
+	Template for this file was taken from Three.js "tutorials by example" by Lee Stemkoski
+*/
+
+// MAIN
+
+// global variables
+var container, scene, camera, renderer, stats;
+var keyboard = new THREEx.KeyboardState();
+var clock = new THREE.Clock();
+var skyBox;
+var MovingCube;
+
+init();
+animate();
+
+// FUNCTIONS 		
+function animate(time) 
+{
+    requestAnimationFrame( animate );
+	render(time);		
+	update();
+}
+
+function update()
+{
+	var oldX = MovingCube.position.x;
+	var oldY = MovingCube.position.y;
+	var oldZ = MovingCube.position.z;
+	getMovement();	
+
+	camera.position.x = MovingCube.position.x;
+	camera.position.y = MovingCube.position.y;
+	camera.position.z = MovingCube.position.z;
+	stats.update();
+}
+
+function render(time) 
+{
+	renderer.render( scene, camera );
+}
+
+
+</script>
+
+</body>
+</html>
+	

@@ -50,9 +50,9 @@ public class MazeResources {
 		return output;
 	}
 
-	@Path("textMaze")
+	@Path("jsonMaze")
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public String getTextMaze(@QueryParam("size") String strSize){
 		Integer size;
 		if (strSize != null)
@@ -60,7 +60,9 @@ public class MazeResources {
 		else
 			size = 30;
 		Maze m = Maze.create(size);
-		String output = m.toString();
+		String[][] grid = m.getGrid();
+		ObjectMapper om = new ObjectMapper();
+		String output = om.writeValueAsString(grid);
 		return output;
 	}
 

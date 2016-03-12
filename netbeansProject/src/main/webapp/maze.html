@@ -18,10 +18,8 @@
 <script src="js/THREEx.WindowResize.js"></script>
 <script src="js/wallBuilder.js"></script>
 <script src="js/initialize.js"></script>
-<script src="js/controls.js"></script>
-<script src="js/physi.js"></script>
-<script src="js/physijs_worker.js"></script>
 <script src="js/firstPersonControls.js"></script>
+
 <!-- jQuery code to display an information button and box when clicked. -->
 <script src="js/jquery-1.9.1.js"></script>
 <script src="js/jquery-ui.js"></script>
@@ -51,17 +49,17 @@ Movement controls: <br/>
 // MAIN
 
 // global variables
-var container, scene, camera, renderer, stats, controls, cameraHeight;
+var container, scene, camera, renderer, stats, controls, cameraHeight, loader;
 var keyboard = new THREEx.KeyboardState();
 var clock = new THREE.Clock();
 var skyBox;
 var MovingCube;
 var size = 40;
+loader = new THREE.TextureLoader();
 cameraHeight = 25;
-Physijs.scripts.worker = '/js/physijs_worker.js';
-Physijs.scripts.ammo = '/js/ammo.js';
+
 $.ajax({
-		url: 'http://localhost:8080/rest/sp/jsonMaze?size=' + size,
+		url: 'http://localhost:8084/rest/sp/jsonMaze?size=' + size,
 		dataType: 'json',
 		type: 'GET',
 		async: true,
@@ -98,7 +96,6 @@ function update()
 
 function render(time) 
 {
-	scene.simulate();
 	cpos = camera.position;
 	camera.position.set(cpos.x, cameraHeight, cpos.z);
 	controls.update(clock.getDelta());

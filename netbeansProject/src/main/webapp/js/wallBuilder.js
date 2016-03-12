@@ -47,7 +47,7 @@ function initWallVars(size)
 	var wallTexture = new THREE.ImageUtils.loadTexture('textures/stoneWall1.png');
 	wallTexture.wrapS = wallTexture.wrapT = THREE.RepeatWrapping;
 	wallTexture.repeat.set(1, 1);
-	wallMaterial = new THREE.MeshBasicMaterial({map: wallTexture});
+	wallMaterial = Physijs.createMaterial(new THREE.MeshBasicMaterial({map: wallTexture}, 1, 0));
 }
 
 function buildLabyrinth(wallMap, xDim, zDim)

@@ -1,6 +1,10 @@
 package com.jcjolley.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jcjolley.maze.Maze;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -30,7 +34,7 @@ public class MazeResources {
 	@Produces(MediaType.TEXT_HTML)
 	public String getMaze(@QueryParam("size") String strSize) {
 		Integer size;
-		if (strSize != null){
+		if (strSize != null) {
 			size = Integer.parseInt(strSize);
 		} else {
 			size = 30;
@@ -53,32 +57,38 @@ public class MazeResources {
 	@Path("jsonMaze")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getTextMaze(@QueryParam("size") String strSize){
+	public String getJsonMaze(@QueryParam("size") String strSize) {
 		Integer size;
-		if (strSize != null)
+		if (strSize != null) {
 			size = Integer.parseInt(strSize);
-		else
+		} else {
 			size = 30;
+		}
 		Maze m = Maze.create(size);
 		String[][] grid = m.getGrid();
 		ObjectMapper om = new ObjectMapper();
-		String output = om.writeValueAsString(grid);
+		String output = new String();
+		try {
+			output = om.writeValueAsString(grid);
+		} catch (Exception ex) {
+			//this is just so it compiles. I love bad practices...
+			// TODO: something useful... ever.
+		}
 		return output;
 	}
 
 	@Path("numberMaze")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getNumberMaze(@QueryParam("size") String strSize){
+	public String getNumberMaze(@QueryParam("size") String strSize) {
 		Integer size;
-		if (strSize != null)
+		if (strSize != null) {
 			size = Integer.parseInt(strSize);
-		else
+		} else {
 			size = 30;
+		}
 		Maze m = Maze.create(size);
-		 
+
 		return m.toNumberString();
 	}
 }
-
-

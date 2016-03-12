@@ -1,8 +1,10 @@
 
-function init() 
+
+function init(size) 
 {
 	// SCENE
-	scene = new THREE.Scene();
+	scene = new Physijs.Scene;
+	scene.setGravity(new THREE.Vector3( 0, -30, 0 ));
 
 	// CAMERA
 	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
@@ -10,18 +12,27 @@ function init()
 	ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT
 	NEAR = 0.1
 	FAR = 20000;
-	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
-	scene.add(camera);
 	
+	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+	camera.position.set(0, cameraHeight, 0);
+	controls = new THREE.FirstPersonControls(camera);
+	controls.movementSpeed = 50;
+	controls.lookSpeed = 0.05;
+	controls.lookVertical = true;
+	controls.constrainVertical = true;
+	controls.noFly = true;
+	
+	scene.add(camera);
 	// RENDERER
-	if ( Detector.webgl )
+	if ( Detector.webgl ) {
 		renderer = new THREE.WebGLRenderer( {antialias:true} );
-	else
-		renderer = new THREE.CanvasRenderer(); 
+	}
+
 	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	container = document.getElementById( 'ThreeJS' );
 	container.appendChild( renderer.domElement );
-	
+	//renderer.renderer.shadowMap.enabled = true;
+	//renderer.shadowMapSoft = true;
 	// EVENTS
 	THREEx.WindowResize(renderer, camera);
 	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
@@ -42,13 +53,24 @@ function init()
 	light.position.set(0,250,0);
 	scene.add(light);
 	
-	// FLOOR
+	/// ROOF
+	var roofTexture = new THREE.ImageUtils.loadTexture( 'textures/stoneWall1.png' );
+	roofTexture.wrapS = roofTexture.wrapT = THREE.RepeatWrapping; 
+	roofTexture.repeat.set( 100, 100);
+	var roofMaterial = new THREE.MeshBasicMaterial( { map: roofTexture, side: THREE.DoubleSide } );
+	var roofGeometry = new THREE.PlaneGeometry(40 * (size + 2), 40 * (size + 2), 10, 0);
+	var roof = new Physijs.PlaneMesh(roofGeometry, roofMaterial);
+	roof.position.y = 40;
+	roof.rotation.x = Math.PI / 2;
+	scene.add(roof);
+	
+// FLOOR
 	var floorTexture = new THREE.ImageUtils.loadTexture( 'textures/ground1.jpg' );
 	floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
-	floorTexture.repeat.set( 10, 10);
+	floorTexture.repeat.set( 100, 100);
 	var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
-	var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 0);
-	var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+	var floorGeometry = new THREE.PlaneGeometry(40 * (size + 2), 40 * (size + 2), 10, 0);
+	var floor = new Physijs.PlaneMesh(floorGeometry, floorMaterial);
 	floor.position.y = 0;
 	floor.rotation.x = Math.PI / 2;
 	scene.add(floor);
@@ -87,16 +109,19 @@ function init()
 					   ['1', '0', '0', '0', '0', '1', '0', '1', '0', '0', '0', '0',  '1', '0', '1'],
 					   ['3', '2', '2', '2', '2', '9', '2', '9', '2', '2', '2', '2',  '9', '2', '4']];
 					   
-	buildLabyrinth(testMapWalls, xDim, zDim);
+	
+
+		
+//buildLabyrinth(testMapWalls, xDim, zDim);
 
 	////////////
 	// CUSTOM //
 	////////////
-	var hitboxDim = 2;
+/*	var hitboxDim = 2;
 	MovingCube = new THREE.Object3D();
 	var hitboxMaterial = new THREE.MeshBasicMaterial( { color: 0xff88ff, opacity: 0, transparent: true } );
 	var MovingCubeGeom = new THREE.CubeGeometry( hitboxDim, hitboxDim, hitboxDim);
-	hitboxCube = new THREE.Mesh( MovingCubeGeom, hitboxMaterial );
+	hitboxCube = new Physijs.BoxMesh( MovingCubeGeom, hitboxMaterial );
 	//var PointerCube = new THREE.Mesh(new THREE.CubeGeometry( 1,1,1), hitboxMaterial);
 	//PointerCube.position.z = -hitboxDim/2;
 
@@ -105,5 +130,5 @@ function init()
 	
 	// TODO: Place the cube/camera at the starting position, looking into the labyrinth
 	MovingCube.position.set(0, 25, 0); 
-	scene.add( MovingCube );	
+	scene.add( MovingCube );*/	
 }

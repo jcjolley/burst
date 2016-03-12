@@ -393,9 +393,9 @@ public class Maze {
 				Pos et = entrance.getPos();
 				Pos ex = exit.getPos();
 				if (x == et.getX() + 1 && y == et.getY() + 1) {
-					wrapGrid[x][y] = "e";
+					wrapGrid[x][y] = "X";
 				} else if (x == ex.getX() + 1 && y == ex.getY() + 1) {
-					wrapGrid[x][y] = "E";
+					wrapGrid[x][y] = "X";
 				}
 			}
 		}

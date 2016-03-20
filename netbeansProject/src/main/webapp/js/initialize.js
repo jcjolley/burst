@@ -24,37 +24,86 @@ function init(size)
 
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 	camera.position.set(0, cameraHeight, 0);
-
-	controls = new THREE.FirstPersonControls(camera);
-	controls.movementSpeed = 50;
-	controls.lookSpeed = 0.05;
-	controls.lookVertical = true;
-	controls.constrainVertical = true;
-	controls.noFly = true;
-
 	camera.add(spotlight);
 	spotlight.position.set(0, 0, 1);
 	spotlight.target = camera;
-
-	scene.add(camera);
+	controls = new THREE.PointerLockControls( camera );
+	scene.add( controls.getObject() );
+	
+	var onKeyDown = function ( event ) {
+		
+		switch ( event.keyCode ) {
+			
+			case 38: // up
+			case 87: // w
+				moveForward = true;
+				break;
+				
+			case 37: // left
+			case 65: // a
+				moveLeft = true; break;
+				
+			case 40: // down
+			case 83: // s
+				moveBackward = true;
+				break;
+				
+			case 39: // right
+			case 68: // d
+				moveRight = true;
+				break;
+				
+			case 32: // space
+				if ( canJump === true ) velocity.y += 350;
+				canJump = false;
+				break;
+				
+		}
+		
+	};
+	
+	var onKeyUp = function ( event ) {
+		
+		switch( event.keyCode ) {
+			
+			case 38: // up
+			case 87: // w
+				moveForward = false;
+				break;
+				
+			case 37: // left
+			case 65: // a
+				moveLeft = false;
+				break;
+							
+			case 40: // down
+			case 83: // s
+				moveBackward = false;
+				break;
+				
+			case 39: // right
+			case 68: // d
+				moveRight = false;
+				break;
+				
+		}
+		
+	};
+	
+	document.addEventListener( 'keydown', onKeyDown, false );
+	document.addEventListener( 'keyup', onKeyUp, false );
+				
+	
 
 
 	// RENDERER
-	if (Detector.webgl) {
-		renderer = new THREE.WebGLRenderer({antialias: true});
-	} else {
-		alert ("WebGL support not detected.")
-	}
+	renderer = new THREE.WebGLRenderer({antialias: true});
 
 	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	renderer.shadowMap.enabled = true;
 	container = document.getElementById('ThreeJS');
 	container.appendChild(renderer.domElement);
 	
-	// EVENTS
-	THREEx.WindowResize(renderer, camera);
-	THREEx.FullScreen.bindKey({charCode: 'm'.charCodeAt(0)});
-
 	// STATS
 	stats = new Stats();
 	stats.domElement.style.position = 'absolute';

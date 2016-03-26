@@ -17,7 +17,8 @@ function init(size) {
 	NEAR = 0.1;
 	FAR = 20000;
 	LIGHTSTATUS = false;
-
+	var cameraboxMaterial = new THREE.MeshBasicMaterial({opacity: 0, transparent: true});
+	var cameraBoxGeometry = new THREE.CubeGeometry(1, 1, 1);
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 	camera.position.set(0, 10, 0);
 	camera.add(spotlight);
@@ -25,7 +26,6 @@ function init(size) {
 	spotlight.target = camera;
 	controls = new THREE.PointerLockControls(camera);
 	scene.add(controls.getObject());
-
 	document.addEventListener('keydown', onKeyDown, false);
 	document.addEventListener('keyup', onKeyUp, false);
 
@@ -43,18 +43,18 @@ function init(size) {
 //	container.appendChild(stats.domElement);
 
 	/// ROOF
-	var roofTexture = loader.load('textures/ceiling.jpg');
-	roofTexture.wrapS = roofTexture.wrapT = THREE.RepeatWrapping;
-	roofTexture.repeat.set(100, 100);
-	var roofMaterial = new THREE.MeshPhongMaterial({map: roofTexture, side: THREE.DoubleSide});
-	var roofGeometry = new THREE.PlaneGeometry(40 * (size + 2), 40 * (size + 2), 10, 0);
-	var roof = new THREE.Mesh(roofGeometry, roofMaterial);
-	roof.position.y = 40;
-	roof.rotation.x = Math.PI / 2;
-	roof.recieveShadow = true;
-	roof.castShadow = true;
-	scene.add(roof);
-
+//	var roofTexture = loader.load('textures/ceiling.jpg');
+//	roofTexture.wrapS = roofTexture.wrapT = THREE.RepeatWrapping;
+//	roofTexture.repeat.set(100, 100);
+//	var roofMaterial = new THREE.MeshPhongMaterial({map: roofTexture, side: THREE.DoubleSide});
+//	var roofGeometry = new THREE.PlaneGeometry(40 * (size + 2), 40 * (size + 2), 10, 0);
+//	var roof = new THREE.Mesh(roofGeometry, roofMaterial);
+//	roof.position.y = 40;
+//	roof.rotation.x = Math.PI / 2;
+//	roof.recieveShadow = true;
+//	roof.castShadow = true;
+//	scene.add(roof);
+//
 	// FLOOR
 	var floorTexture = loader.load('textures/ground1.jpg');
 	floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
@@ -68,13 +68,14 @@ function init(size) {
 	scene.add(floor);
 
 	// SKYBOX/FOG
-	var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
+	var skyBoxGeometry = new THREE.CubeGeometry(2000, 2000, 2000);
 	var skyBoxMaterial = new THREE.MeshBasicMaterial({color: 0x9999ff, side: THREE.BackSide});
 	skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
 
 	scene.add(skyBox);
-	scene.fog = new THREE.FogExp2(0x999999, 0.01);
 
+	
 	window.addEventListener('resize', onWindowResize, false);
 
+	skyAnimator = new SkyAnimator(skyBox, scene);
 }

@@ -65,7 +65,9 @@
 		<script src="collisions.js" type="text/javascript"></script>
 		<script src="initialize.js" type="text/javascript"></script>
 		<script src="jquery-1.9.1.js" type="text/javascript"></script>
+		<script src="minimap.js" type="text/javascript"></script>
 		<script src="wallBuilder.js" type="text/javascript"></script>
+		<script src="SkyAnimator.js" type="text/javascript"></script>
 		<div id="blocker">
 
 			<div id="instructions">
@@ -94,6 +96,9 @@
 			var canJump = false;
 			var prevTime = performance.now();
 			var velocity = new THREE.Vector3();
+			var Labyrinth;
+			var minimap;
+			var ajaxReturned = false;
 
 			controlsEnabled = setupPointerLock(controlsEnabled, element);
 			$.ajax({
@@ -108,6 +113,13 @@
 				initWallVars(size);
 				goodMaze = data;
 				buildSimpleLaby(goodMaze);
+				minimap = new Minimap(Labyrinth, controls.getObject());
+				minimap.createMinimap();
+				camera.add(minimap.map);	
+				minimap.map.position.x = 0.6;
+				minimap.map.position.y = -0.2;
+				minimap.map.position.z = -1;
+				ajaxReturned = true;
 			});
 			init(size);
 			animate();
@@ -119,6 +131,13 @@
 			}
 
 			function animate() {
+				
+				skyAnimator.animateSky();
+				if (ajaxReturned){
+					console.log("Called ajaxReturned (sorry for the spam)")	
+					minimap.animateMap();
+				}
+
 				requestAnimationFrame(animate);
 				if (controlsEnabled) {
 					checkForCollisions();

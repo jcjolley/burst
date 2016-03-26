@@ -8,7 +8,7 @@ var goodMaze;
 
 function buildSimpleLaby(goodMaze)
 {
-	var Labyrinth = new THREE.Object3D();
+	Labyrinth = new THREE.Object3D();
 	var zLocation = -zDim * zLen / 2;
 	var cubeGeometry = new THREE.CubeGeometry(xLen, yLen, zLen);
 	var collisionGeometry = new THREE.CubeGeometry(xLen + 20, yLen + 20, zLen + 20);

@@ -1,7 +1,2 @@
-/maze/target/
-/rest/target/
-/Experiments/nbproject/private/
-/burst/target/
-/netbeansProject/src/main/webapp/nbproject/private/
-/netbeansProject/target/
-/src/main/webapp/nbproject/private/
+target/
+src/main/webapp/nbproject/private/

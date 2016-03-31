@@ -51,7 +51,7 @@
 
 			controlsEnabled = setupPointerLock(controlsEnabled, element);
 			$.ajax({
-				url: 'http://localhost:8080/burst/sp/jsonMaze?size=' + size,
+				url: 'http://localhost:8080/rest/burst/sp/jsonMaze?size=' + size,
 				dataType: 'json',
 				type: 'GET',
 				async: true,
